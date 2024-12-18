@@ -4,10 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_cors import CORS
-from dotenv import load_dotenv
+# from Dotenv import load_dotenv
 
-# Load environment variables from .env
-load_dotenv()
+# # Load environment variables from .env
+# load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)

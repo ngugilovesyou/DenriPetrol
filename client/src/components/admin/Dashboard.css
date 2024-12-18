@@ -387,6 +387,7 @@ button {
 /* Fuel Management Specific Styles */
 .fuel-management {
   padding: 20px;
+  background-color: #e67e22;
 }
 
 .fuel-management h2 {

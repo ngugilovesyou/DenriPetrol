@@ -2,18 +2,53 @@ import React, { useState } from "react";
 
 function EmployeeManagement() {
   const [employees, setEmployees] = useState([
-    { id: 1, name: "John Doe", role: "Pump Attendant", sales: 500, shift: "Morning" },
-    { id: 2, name: "Jane Smith", role: "Cashier", sales: 700, shift: "Afternoon" },
+    {
+      id: 1,
+      name: "Kyle Peters",
+      role: "Pump Attendant",
+      sales: 500,
+      shift: "Morning",
+      avatar: "https://via.placeholder.com/50",
+    },
+    {
+      id: 2,
+      name: "mk",
+      role: "Cashier",
+      sales: 700,
+      shift: "Afternoon",
+      avatar: "https://via.placeholder.com/50",
+    },
   ]);
+
   const [newEmployee, setNewEmployee] = useState({
     name: "",
     role: "",
     shift: "",
+    avatar: "",
   });
-  const [salesInput, setSalesInput] = useState({
-    employeeId: "",
-    salesAmount: "",
-  });
+
+  // Handle New Employee Image Upload
+  const handleImageUpload = (e, employeeId = null) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (employeeId) {
+          // Update the avatar for existing employees
+          const updatedEmployees = employees.map((employee) =>
+            employee.id === employeeId
+              ? { ...employee, avatar: reader.result }
+              : employee
+          );
+          setEmployees(updatedEmployees);
+        } else {
+          // Add avatar to new employee
+          setNewEmployee({ ...newEmployee, avatar: reader.result });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Add New Employee
   const handleAddEmployee = () => {
@@ -23,39 +58,17 @@ function EmployeeManagement() {
         {
           id: employees.length + 1,
           ...newEmployee,
-          sales: 0, // Start with 0 sales
+          sales: 0,
+          avatar: newEmployee.avatar || "https://via.placeholder.com/50",
         },
       ]);
-      setNewEmployee({ name: "", role: "", shift: "" });
+      setNewEmployee({ name: "", role: "", shift: "", avatar: "" });
     }
   };
 
-  // Remove Employee
+  // Handle Remove Employee
   const handleRemoveEmployee = (id) => {
     setEmployees(employees.filter((employee) => employee.id !== id));
-  };
-
-  // Handle Sales Input
-  const handleSalesInput = (employeeId, amount) => {
-    setSalesInput({
-      employeeId: employeeId,
-      salesAmount: amount,
-    });
-  };
-
-  // Update Employee Sales
-  const handleAddSales = () => {
-    const updatedEmployees = employees.map((employee) => {
-      if (employee.id === salesInput.employeeId) {
-        return {
-          ...employee,
-          sales: employee.sales + parseFloat(salesInput.salesAmount), // Add sales amount to existing sales
-        };
-      }
-      return employee;
-    });
-    setEmployees(updatedEmployees);
-    setSalesInput({ employeeId: "", salesAmount: "" }); // Reset sales input
   };
 
   return (
@@ -69,6 +82,7 @@ function EmployeeManagement() {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Avatar</th>
               <th>Name</th>
               <th>Role</th>
               <th>Shift</th>
@@ -80,24 +94,37 @@ function EmployeeManagement() {
             {employees.map((employee) => (
               <tr key={employee.id}>
                 <td>{employee.id}</td>
+                <td>
+                  {/* Avatar with click-to-upload functionality */}
+                  <label htmlFor={`avatar-upload-${employee.id}`}>
+                    <img
+                      src={employee.avatar}
+                      alt="avatar"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                      }}
+                      title="Click to change avatar"
+                    />
+                  </label>
+                  <input
+                    id={`avatar-upload-${employee.id}`}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => handleImageUpload(e, employee.id)}
+                  />
+                </td>
                 <td>{employee.name}</td>
                 <td>{employee.role}</td>
                 <td>{employee.shift}</td>
                 <td>${employee.sales}</td>
                 <td>
-                  <button onClick={() => handleRemoveEmployee(employee.id)}>Remove</button>
-                  {/* Sales Input Form */}
-                  <div>
-                    <input
-                      type="number"
-                      placeholder="Sales Amount"
-                      value={salesInput.employeeId === employee.id ? salesInput.salesAmount : ""}
-                      onChange={(e) =>
-                        handleSalesInput(employee.id, e.target.value)
-                      }
-                    />
-                    <button onClick={handleAddSales}>Add Sales</button>
-                  </div>
+                  <button onClick={() => handleRemoveEmployee(employee.id)}>
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))}
@@ -108,39 +135,55 @@ function EmployeeManagement() {
       {/* Add New Employee */}
       <section>
         <h3>Add New Employee</h3>
-        <div className="form">
+        <div>
           <input
             type="text"
             placeholder="Name"
             value={newEmployee.name}
-            onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+            onChange={(e) =>
+              setNewEmployee({ ...newEmployee, name: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Role"
             value={newEmployee.role}
-            onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+            onChange={(e) =>
+              setNewEmployee({ ...newEmployee, role: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Shift (Morning/Afternoon)"
             value={newEmployee.shift}
-            onChange={(e) => setNewEmployee({ ...newEmployee, shift: e.target.value })}
+            onChange={(e) =>
+              setNewEmployee({ ...newEmployee, shift: e.target.value })
+            }
           />
+          <label htmlFor="new-employee-avatar" style={{ cursor: "pointer" }}>
+            📷 Upload Avatar
+          </label>
+          <input
+            id="new-employee-avatar"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+          />
+          {newEmployee.avatar && (
+            <img
+              src={newEmployee.avatar}
+              alt="preview"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                marginLeft: "10px",
+              }}
+            />
+          )}
           <button onClick={handleAddEmployee}>Add Employee</button>
         </div>
-      </section>
-
-      {/* Performance Tracking */}
-      <section>
-        <h3>Performance Tracking</h3>
-        <ul>
-          {employees.map((employee) => (
-            <li key={employee.id}>
-              {employee.name} ({employee.role}) - Sales: ${employee.sales}
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   );

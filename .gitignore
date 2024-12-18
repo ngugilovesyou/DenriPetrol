@@ -1,2 +1,7 @@
-.env
-
+#.gitignore file
+# .env
+client/
+# sales
+# fueltype,pump,employee,date,time, amount, totalcost
+# orders
+# fuel-type, supplier, status default-pending, estimated_deliverytime

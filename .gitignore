@@ -1,6 +1,6 @@
 #.gitignore file
 # .env
-client/
+# client/
 # sales
 # fueltype,pump,employee,date,time, amount, totalcost
 # orders

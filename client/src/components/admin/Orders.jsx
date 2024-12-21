@@ -127,7 +127,7 @@ function Orders() {
                   <td>{order.deliveryTime}</td>
                   <td>
                     {order.status !== "Completed" && (
-                      <button onClick={() => handleStatusChange(order.id)}>
+                      <button onClick={() => handleStatusChange(order.id)} >
                         Complete
                       </button>
                     )}

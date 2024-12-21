@@ -25,15 +25,17 @@ function FuelManagement() {
     }));
   };
 
-
   const saveChanges = (fuelId) => {
+    const fuelToUpdate = fuelStock.find((fuel) => fuel.id === fuelId);
+    if (!fuelToUpdate) return; // No fuel found for the given ID
+
     const updatedFuel = {
-      ...fuelStock[fuelId],
+      ...fuelToUpdate,
       ...formData[fuelId],
     };
 
-    fetch(`http://localhost:3000/fuelManagement/${updatedFuel.id}`, {
-      method: "PUT",
+    fetch(`http://localhost:3000/fuelManagement/${fuelId}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -44,8 +46,9 @@ function FuelManagement() {
         return r.json();
       })
       .then((updated) => {
-        const updatedStock = [...fuelStock];
-        updatedStock[fuelId] = updated;
+        const updatedStock = fuelStock.map((fuel) =>
+          fuel.id === fuelId ? updated : fuel
+        );
         setFuelStock(updatedStock);
         setFormData((prev) => ({ ...prev, [fuelId]: {} }));
       })

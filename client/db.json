@@ -2,8 +2,8 @@
   "fuelManagement": [
     {
       "type": "Petrol",
-      "level": 90,
-      "price": 150,
+      "level": 100,
+      "price": 157,
       "id": "6327"
     }
   ],
@@ -155,6 +155,13 @@
       "fuelType": "Petrol",
       "supplier": "Supplier A",
       "deliveryTime": "2024-12-21T23:20",
+      "status": "Completed"
+    },
+    {
+      "id": "75e7",
+      "fuelType": "Petrol",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-12-22T23:20",
       "status": "Completed"
     }
   ],

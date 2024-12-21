@@ -1,40 +1,16 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState,useEffect } from "react";
 import { jsPDF } from "jspdf";  // Import jsPDF
 import * as XLSX from "xlsx";  // Import XLSX
 
 function SalesOverview() {
-  const [sales, setSales] = useState([
-    {
-      id: 1,
-      fuelType: "Petrol",
-      pump: "Pump 1",
-      employee: "John Doe",
-      date: "2024-06-17",
-      time: "08:00",
-      amount: 100,
-      totalCost: 15000,
-    },
-    {
-      id: 2,
-      fuelType: "Diesel",
-      pump: "Pump 2",
-      employee: "Jane Smith",
-      date: "2024-06-17",
-      time: "09:30",
-      amount: 200,
-      totalCost: 30000,
-    },
-    {
-      id: 3,
-      fuelType: "Kerosene",
-      pump: "Pump 3",
-      employee: "John Doe",
-      date: "2024-06-17",
-      time: "10:00",
-      amount: 50,
-      totalCost: 7500,
-    },
-  ]);
+  const [sales, setSales] = useState([]);
+
+  useEffect(()=>{
+    fetch("http://localhost:3000/sales")
+     .then((r) => r.json())
+     .then((data) => setSales(data));
+  })
 
   const [selectedFilter, setSelectedFilter] = useState("all");
 
@@ -91,7 +67,7 @@ function SalesOverview() {
 
   return (
     <div className="sales-overview">
-      <h2>Sales Management</h2>
+      <h2 className="text-4xl font-bold">Sales Management</h2>
 
       {/* Daily Sales Reports */}
       <section>
@@ -121,7 +97,12 @@ function SalesOverview() {
             </tr>
           </thead>
           <tbody>
-            {filteredSales.map((sale) => (
+            {filteredSales.length === 0 ? (
+              <tr>
+                <td colSpan="8">No sales data available</td>
+              </tr>
+            ):(
+               filteredSales.map((sale) => (
               <tr key={sale.id}>
                 <td>{sale.id}</td>
                 <td>{sale.fuelType}</td>
@@ -132,7 +113,9 @@ function SalesOverview() {
                 <td>{sale.amount}</td>
                 <td>{sale.totalCost}</td>
               </tr>
-            ))}
+            ))
+            )}
+           
           </tbody>
         </table>
       </section>

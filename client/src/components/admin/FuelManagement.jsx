@@ -1,28 +1,60 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 function FuelManagement() {
-  const [fuelStock, setFuelStock] = useState([
-    { type: 'Petrol', level: 50, price: 100 },
-    { type: 'Diesel', level: 80, price: 90 },
-    { type: 'Kerosene', level: 30, price: 70 },
-  ]);
+  const [fuelStock, setFuelStock] = useState([]);
+  const [formData, setFormData] = useState({});
 
-  const updateStock = (index, newLevel) => {
-    const updatedStock = [...fuelStock];
-    updatedStock[index].level = newLevel;
-    setFuelStock(updatedStock);
+  useEffect(() => {
+    fetch("http://localhost:3000/fuelManagement")
+      .then((r) => r.json())
+      .then((data) => setFuelStock(data))
+      .catch((error) => console.error("Error fetching fuel data:", error));
+  }, []);
+
+  const handleInputChange = (fuelId, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fuelId]: {
+        ...prev[fuelId],
+        [field]:
+          field === "level" || field === "price"
+            ? Math.max(0, parseFloat(value) || 0) // Ensure non-negative values
+            : value,
+      },
+    }));
   };
 
-  const updatePrice = (index, newPrice) => {
-    const updatedStock = [...fuelStock];
-    updatedStock[index].price = newPrice;
-    setFuelStock(updatedStock);
+
+  const saveChanges = (fuelId) => {
+    const updatedFuel = {
+      ...fuelStock[fuelId],
+      ...formData[fuelId],
+    };
+
+    fetch(`http://localhost:3000/fuelManagement/${updatedFuel.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFuel),
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to save changes");
+        return r.json();
+      })
+      .then((updated) => {
+        const updatedStock = [...fuelStock];
+        updatedStock[fuelId] = updated;
+        setFuelStock(updatedStock);
+        setFormData((prev) => ({ ...prev, [fuelId]: {} }));
+      })
+      .catch((error) => console.error("Error saving changes:", error));
   };
 
   return (
     <div className="fuel-management">
-      <h2>Fuel Management</h2>
+      <h2 className="text-4xl font-bold">Fuel Management</h2>
       <table border="1" width="100%">
         <thead>
           <tr>
@@ -31,30 +63,52 @@ function FuelManagement() {
             <th>Price</th>
             <th>Update Level</th>
             <th>Update Price</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {fuelStock.map((fuel, index) => (
-            <tr key={index}>
-              <td>{fuel.type}</td>
-              <td>{fuel.level}%</td>
-              <td>{fuel.price}</td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="New Level"
-                  onBlur={(e) => updateStock(index, e.target.value)}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="New Price"
-                  onBlur={(e) => updatePrice(index, e.target.value)}
-                />
-              </td>
+          {fuelStock.length === 0 ? (
+            <tr>
+              <td colSpan="6">No fuel data available</td>
             </tr>
-          ))}
+          ) : (
+            fuelStock.map((fuel) => (
+              <tr key={fuel.id}>
+                <td>{fuel.type}</td>
+                <td>{fuel.level}%</td>
+                <td>{fuel.price}</td>
+                <td>
+                  <input
+                    type="number"
+                    placeholder="New Level"
+                    value={formData[fuel.id]?.level || ""}
+                    onChange={(e) =>
+                      handleInputChange(fuel.id, "level", e.target.value)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    placeholder="New Price"
+                    value={formData[fuel.id]?.price || ""}
+                    onChange={(e) =>
+                      handleInputChange(fuel.id, "price", e.target.value)
+                    }
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    className="save-btn"
+                    onClick={() => saveChanges(fuel.id)}
+                  >
+                    Save
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 
@@ -63,8 +117,8 @@ function FuelManagement() {
         <h3>Alerts</h3>
         {fuelStock
           .filter((fuel) => fuel.level < 10)
-          .map((lowFuel, index) => (
-            <p key={index} style={{ color: "red" }}>
+          .map((lowFuel) => (
+            <p key={lowFuel.id} style={{ color: "red" }}>
               Warning: {lowFuel.type} is below 10%!
             </p>
           ))}

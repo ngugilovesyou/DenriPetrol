@@ -7,17 +7,17 @@ import Container from './components/Container'
 import About from './components/About'
 import Services from './components/Services'
 import ContactUs from './components/ContactUs'
-import Dashboard from './components/admin/Dashboard.jsx';
+// import Dashboard from './components/admin/Dashboard.jsx';
 
 function App() {
   return (
     <div id='home'>
-     {/* <Navbar />
+     <Navbar />
      <Container />
      <Services />
      <About />
-     <ContactUs /> */}
-     <Dashboard />  
+     <ContactUs />
+     {/* <Dashboard />   */}
     </div>
   )
     

@@ -1,36 +1,37 @@
-/* eslint-disable no-unused-vars */
-import { useState } from "react";
-import React from 'react'
+import { useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
+import React from "react";
+import useStore from "./Store";
 
 function Performance() {
-    const [employees, setEmployees] = useState([
-      {
-        id: 1,
-        name: "John Doe",
-        role: "Pump Attendant",
-        sales: 500,
-        shift: "Morning",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        role: "Cashier",
-        sales: 700,
-        shift: "Afternoon",
-      },
-    ]);
+  const { employees, setEmployees } = useStore();
+
+  useEffect(() => {
+    fetch("http://localhost:3000/employee")
+      .then((r) => r.json())
+      .then((data) => setEmployees(data));
+  }, [setEmployees]);
+
   return (
     <div>
-      <h3>Performance Tracking</h3>
+      <h3 className="text-4xl font-bold">Performance Tracking</h3>
       <ul>
-        {employees.map((employee) => (
-          <li key={employee.id}>
-            {employee.name} ({employee.role}) - Sales: ${employee.sales}
-          </li>
-        ))}
+        {employees.length === 0 ? (
+          <li>No employee data available</li>
+        ) : (
+          employees.map((employee) => (
+            <li key={employee.id}>
+              {employee.firstName} {employee.lastName} ({employee.role})
+              {employee.role === "Pump Attendant" &&
+                employee.sales !== undefined && (
+                  <> - Sales: ${employee.sales}</>
+                )}
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );
 }
 
-export default Performance
+export default Performance;

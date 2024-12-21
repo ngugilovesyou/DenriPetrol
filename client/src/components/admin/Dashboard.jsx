@@ -29,16 +29,18 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard">
+    // div.container mx-auto
+    // <div className="container mx-auto">
+
+    // </div>
+    <div className="dashboard md:container md:mx-auto">
       <Navbar />
       <div className="dashboard-content">
         {/* Sidebar to set which section to display */}
         <Sidebar setSection={setCurrentSection} />
-        
+
         {/* Main content dynamically rendering the active section */}
-        <main className="main-content">
-          {renderSection()}
-        </main>
+        <main className="main-content">{renderSection()}</main>
       </div>
     </div>
   );

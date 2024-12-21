@@ -1,24 +1,31 @@
-import React, { useState } from "react";
-
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
 function Orders() {
-  const [orders, setOrders] = useState([
-    { id: 1, fuelType: "Petrol", status: "Pending", supplier: "Supplier A", deliveryTime: "2024-06-18 10:00" },
-    { id: 2, fuelType: "Diesel", status: "In Progress", supplier: "Supplier B", deliveryTime: "2024-06-18 15:00" },
-    { id: 3, fuelType: "Kerosene", status: "Completed", supplier: "Supplier C", deliveryTime: "2024-06-17 12:00" },
-  ]);
-
+  const [orders, setOrders] = useState([]);
   const [newOrder, setNewOrder] = useState({
     fuelType: "",
     supplier: "",
     deliveryTime: "",
   });
+  const [suppliers, setSuppliers] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const [suppliers, setSuppliers] = useState([
-    { name: "Supplier A", contact: "supplierA@example.com" },
-    { name: "Supplier B", contact: "supplierB@example.com" },
-    { name: "Supplier C", contact: "supplierC@example.com" },
-  ]);
+  useEffect(() => {
+    fetch("http://localhost:3000/orders")
+      .then((r) => r.json())
+      .then((data) => setOrders(data));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/suppliers")
+      .then((r) => r.json())
+      .then((data) => setSuppliers(data));
+  }, []);
 
   // Handle input changes for creating new orders
   const handleInputChange = (e) => {
@@ -26,27 +33,70 @@ function Orders() {
     setNewOrder({ ...newOrder, [name]: value });
   };
 
+  // Show Snackbar
+  const showSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
+
   // Place a new order
   const placeOrder = () => {
-    if (newOrder.fuelType && newOrder.supplier && newOrder.deliveryTime) {
-      const newOrderEntry = {
-        id: orders.length + 1,
-        fuelType: newOrder.fuelType,
-        supplier: newOrder.supplier,
-        status: "Pending",
-        deliveryTime: newOrder.deliveryTime,
-      };
-      setOrders([...orders, newOrderEntry]);
-      setNewOrder({ fuelType: "", supplier: "", deliveryTime: "" });
-      alert("Order placed successfully!");
-    } else {
-      alert("Please fill out all fields to place an order.");
+    if (!newOrder.fuelType || !newOrder.supplier || !newOrder.deliveryTime) {
+      showSnackbar("Please fill out all fields to place an order.", "error");
+      return;
     }
+
+    fetch("http://localhost:3000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newOrder),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        const newOrderEntry = {
+          id: orders.length + 1,
+          fuelType: newOrder.fuelType,
+          supplier: newOrder.supplier,
+          status: "Pending",
+          deliveryTime: newOrder.deliveryTime,
+        };
+        setOrders([...orders, newOrderEntry]);
+        setNewOrder({ fuelType: "", supplier: "", deliveryTime: "" });
+        showSnackbar("Order placed successfully!", "success");
+      })
+      .catch(() => {
+        showSnackbar("Failed to place the order. Please try again.", "error");
+      });
+  };
+
+  // Update order status to "Completed"
+  const handleStatusChange = (Id) => {
+    fetch(`http://localhost:3000/orders/${Id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: "Completed" }),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        const updatedOrders = orders.map((order) =>
+          order.id === Id ? { ...order, status: "Completed" } : order
+        );
+        setOrders(updatedOrders);
+        showSnackbar("Order marked as completed.", "success");
+      })
+      .catch(() => {
+        showSnackbar("Failed to update order status.", "error");
+      });
   };
 
   return (
     <div className="orders">
-      <h2>Orders and Suppliers</h2>
+      <h2 className="text-4xl font-bold">Orders and Suppliers</h2>
 
       {/* Manage Fuel Deliveries */}
       <section>
@@ -59,18 +109,32 @@ function Orders() {
               <th>Supplier</th>
               <th>Status</th>
               <th>Estimated Delivery Time</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.fuelType}</td>
-                <td>{order.supplier}</td>
-                <td>{order.status}</td>
-                <td>{order.deliveryTime}</td>
+            {orders.length === 0 ? (
+              <tr>
+                <td colSpan="6">No orders available</td>
               </tr>
-            ))}
+            ) : (
+              orders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.id}</td>
+                  <td>{order.fuelType}</td>
+                  <td>{order.supplier}</td>
+                  <td>{order.status}</td>
+                  <td>{order.deliveryTime}</td>
+                  <td>
+                    {order.status !== "Completed" && (
+                      <button onClick={() => handleStatusChange(order.id)}>
+                        Complete
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>
@@ -81,17 +145,25 @@ function Orders() {
         <div className="order-form">
           <label>
             Fuel Type:
-            <input
-              type="text"
+            <select
               name="fuelType"
               value={newOrder.fuelType}
               onChange={handleInputChange}
-              placeholder="e.g., Petrol"
-            />
+            >
+              <option value="">Select Fuel Type</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Kerosene">Kerosene</option>
+            </select>
           </label>
+
           <label>
             Supplier:
-            <select name="supplier" value={newOrder.supplier} onChange={handleInputChange}>
+            <select
+              name="supplier"
+              value={newOrder.supplier}
+              onChange={handleInputChange}
+            >
               <option value="">Select Supplier</option>
               {suppliers.map((supplier, index) => (
                 <option key={index} value={supplier.name}>
@@ -124,6 +196,21 @@ function Orders() {
           ))}
         </ul>
       </section>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

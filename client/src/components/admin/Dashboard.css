@@ -15,6 +15,7 @@ body, html {
   background-color: #f9f9f9;
   position: fixed;
   width: 100%;
+  overflow: hidden;
 }
 
 /* Navbar Styling */
@@ -34,7 +35,7 @@ body, html {
 }
 
 .navbar .profile-icon {
-  background: url('profile-icon.png') no-repeat center;
+  /* background: url('profile-icon.png') no-repeat center; */
   background-size: cover;
   width: 30px;
   height: 30px;
@@ -46,6 +47,7 @@ body, html {
 .dashboard-content {
   display: flex;
   flex: 1;
+  overflow: hidden;
   
 }
 
@@ -57,6 +59,7 @@ body, html {
   padding: 20px;
   overflow-y: auto;
   height: 100vh;
+  /* position: relative; */
 }
 
 .sidebar h3 {
@@ -86,18 +89,17 @@ body, html {
 /* Main Content */
 .main-content {
   display: flex;
+  flex: 1;
   gap: 20px;
   width: 100%;
-  height: 100lvh;
-  position: relative;
+  height: 100%;
   overflow-y: auto;
   margin-bottom: 2em;
+  overflow-x: hidden;
   
 }
 
 .tracking-cont {
-  /* flex: 1; */
-  /* Takes up 1/5 of the container width */
   margin-top: 10px;
   background-color: #ecf0f1;
   border-radius: 8px;
@@ -122,27 +124,14 @@ body, html {
   margin-top: 10px;
   width: 940px;
   padding: 15px;
-  /* border: 1px solid black; */
   color: black;
   border-radius: 8px;
-  background-color: #F59E0B;
   overflow-y: auto;
 }
-/* Individual Boxes */
-/* .main-content > div div {
-  background-color: #ecf0f1;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-} */
-
 
 /* Employee Management */
 #employee-management {
   padding: 20px;
-  background-color: #F59E0B;
-  /* position: relative; */
 }
 
 h2, h3 {
@@ -171,7 +160,7 @@ th {
 /* Orders Section */
 .orders {
   padding: 20px;
-  background-color: #F59E0B;
+  /* background-color: #F59E0B; */
   width: 100%;
   position: relative;
 }
@@ -306,7 +295,7 @@ th {
 /* Sales Overview */
 .sales-overview {
   padding: 20px;
-  background-color: #F59E0B;
+  /* background-color: #F59E0B; */
   width: 100%;
 }
 
@@ -369,41 +358,11 @@ th {
   margin-right: 5px;
 }
 
-/* .employee-management .form input {
-  margin-top: 10px;
-} */
-
-/* .employee-management .form input[type="number"] {
-  width: 60%;
-  margin-top: 10px;
-} */
-
-/* .employee-management button {
-  background-color: #f39c12;
-  color: white;
-}
-
-.employee-management button:hover {
-  background-color: #e67e22;
-}
-
-.employee-management {
-  background-color: #e67e22;
-} */
-
 /* Fuel Management Specific Styles */
 .fuel-management {
   padding: 20px;
-  background-color: #F59E0B;
   width: 100%;
 }
-
-/* .fuel-management h2 {
-  font-size: 26px;
-  color: #34495e;
-  margin-bottom: 20px;
-  text-align: center;
-} */
 
 .fuel-management table {
   width: 100%;
@@ -467,4 +426,10 @@ th {
   margin-bottom: 20px;
   box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
   margin-left: 8em;
+}
+
+.save-btn{
+  background-color: "#F59E0B";
+  padding:'10px';
+  border-radius: 10px;
 }

@@ -1,41 +1,116 @@
 from app import app, db
-from app import Admin, Employee, Sales
-from datetime import datetime  # Import the datetime module
+from models import User, Employee, Sales, Order, Supplier, Fuel
+from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 # Run this script inside a Flask context
 with app.app_context():
-    # Seed data for Admins
-    def seed_admins():
-        admin1 = Admin(username='admin1', email='admin1@example.com', password='admin1password')
-        admin2 = Admin(username='admin2', email='admin2@example.com', password='admin2password')
-        db.session.add(admin1)
-        db.session.add(admin2)
+    # Seed data for Users
+    User.query.delete()
+    db.session.commit()
+    Employee.query.delete()
+    db.session.commit()
 
-    # Seed data for Employees
+    def seed_users():
+        # Create User objects
+        user1 = User(
+            first_name='James', 
+            last_name='Bond', 
+            email='User1@example.com',
+            password=generate_password_hash('User1password'),
+            is_admin=True, 
+            date_joined=datetime.strptime('2024-01-15', '%Y-%m-%d').date()
+        )
+        user2 = User(
+            first_name='Joshua', 
+            last_name='Bed', 
+            email='User2@example.com', 
+            password=generate_password_hash('User2password'),
+            is_admin=False, 
+            date_joined=datetime.strptime('2024-01-15', '%Y-%m-%d').date()
+        )
+        # Add all users to the database session
+        db.session.add_all([user1, user2])
+        db.session.commit()
+        print("Seeded users successfully.")
+
     def seed_employees():
-        # Convert string date to datetime.date object
-        date1 = datetime.strptime('2024-01-15', '%Y-%m-%d').date()
-        date2 = datetime.strptime('2024-02-20', '%Y-%m-%d').date()
+        # Create Employee objects
+        employee1 = Employee(
+            first_name='Samuel', 
+            last_name='Gitau', 
+            email='samuel.gitau@example.com', 
+            role='Marketing Manager', 
+            phone_number='+254758750963', 
+            shift='Morning', 
+            sales=0, 
+            salary=100000, 
+            is_paid=False, 
+            date_joined=datetime.strptime('2024-01-01', '%Y-%m-%d').date()
+        )
+        # Add all employees to the session
+        db.session.add_all([employee1])
+        db.session.commit()
+        print("Employees seeded successfully.")
 
-        employee1 = Employee(name='John Doe', role='Manager', shift='Morning', sales=1000.0, salary=3000.0, date_joined=date1)
-        employee2 = Employee(name='Jane Doe', role='Attendant', shift='Afternoon', sales=500.0, salary=2000.0, date_joined=date2)
-        db.session.add(employee1)
-        db.session.add(employee2)
-
-    # Seed data for Sales
     def seed_sales():
-        sale1 = Sales(fuel_type='Gasoline', pump_number=1, liters=50, employee_id=1)
-        sale2 = Sales(fuel_type='Diesel', pump_number=2, liters=30, employee_id=2)
-        db.session.add(sale1)
-        db.session.add(sale2)
+        # Create Sales records
+        sale1 = Sales(
+            fuel_type='Diesel', 
+            pump='Pump 1', 
+            date=datetime.strptime('2024-12-23', '%Y-%m-%d').date(), 
+            time=datetime.strptime('14:39', '%H:%M').time(),
+            litres=1000.0, 
+            total_cost=15000.0,
+            employee_id=1  
+        )
+        # Add all sales to the session
+        db.session.add_all([sale1])
+        db.session.commit()
+        print("Sales seeded successfully.")
+    
+    def seed_suppliers():
+        # Create Supplier objects
+        supplier1 = Supplier(
+            name='ABC Fuels',
+            email='contact@abcfuels.com',
+            phone_number='254712345678'
+        )
+        db.session.add_all([supplier1])
+        db.session.commit()
+        print("Suppliers seeded successfully.")
 
-    # Call the seeding functions
+    def seed_orders():
+        # Create Order objects
+        order1 = Order(
+            fuel_type='Diesel',
+            supplier='ABC Fuels',
+            status='Pending',
+            estimated_delivery_date=datetime.strptime('2024-12-28', '%Y-%m-%d').date()
+        )
+        db.session.add_all([order1])
+        db.session.commit()
+        print("Orders seeded successfully.")
+
+    def seed_fuel():
+        fuel1 = Fuel(fuel_type="Petrol", level=0, price=0)
+        fuel2 = Fuel(fuel_type="Diesel", level=0, price=0)
+        db.session.add_all([fuel1, fuel2])
+        db.session.commit()
+        print("Fuel seeded successfully.")
+
     def seed_data():
-        seed_admins()
-        seed_employees()
-        seed_sales()
-        db.session.commit()  # Commit the session to save the data
+        try:
+            seed_users()
+            seed_employees()
+            seed_sales()
+            seed_suppliers()
+            seed_orders()
+            seed_fuel()
+            print("Database seeded successfully!")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Seeding failed: {e}")
 
-    # Execute seeding
-    seed_data()
-    print("Database seeded successfully!")
+    if __name__ == '__main__':
+        seed_data()

@@ -106,7 +106,7 @@ function FuelManagement() {
                     className="save-btn"
                     onClick={() => saveChanges(fuel.id)}
                   >
-                    Save
+                    Update Fuel
                   </button>
                 </td>
               </tr>

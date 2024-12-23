@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 function SignUp() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
     is_Admin:false
   });
+  const navigate = useNavigate();
   const handleUserInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -28,25 +29,31 @@ function SignUp() {
     }
 
     // Add new employee to the database
-    fetch("http://localhost:3000/users", {
+    fetch("http://127.0.0.1:5000/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to create user. Please try again.");
+        }
+        return r.json();
+      })
       .then((data) => {
-        console.log(data);
+        setFormData(data);
         // Reset form
         setFormData({
-          firstName: "",
-          lastName: "",
+          first_name: "",
+          last_name: "",
           email: "",
           password: "",
-          is_admin:false
         });
-      });
+        navigate('/login')
+      })
+      .catch((error)=>console.log("error", error))
   };
   return (
     <div id="signup-form">
@@ -58,8 +65,8 @@ function SignUp() {
             <input
               type="text"
               // name="floating_first_name"
-              name="firstName"
-              value={formData.firstName}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleUserInput}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
@@ -77,8 +84,8 @@ function SignUp() {
             <input
               type="text"
               // name="floating_last_name"
-              name="lastName"
-              value={formData.lastName}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleUserInput}
               id="floating_last_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -129,7 +136,7 @@ function SignUp() {
             required
           />
           <label
-            htmlFor="floating_phone"
+            htmlFor="floating_password"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Password
@@ -142,13 +149,13 @@ function SignUp() {
             name="password"
             value={formData.password}
             onChange={handleUserInput}
-            id="floating_password"
+            id="floating_password_confirmation"
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
           />
           <label
-            htmlFor="floating_password"
+            htmlFor="floating_password_confirmation"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Confirm Password

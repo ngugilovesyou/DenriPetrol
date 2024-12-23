@@ -4,17 +4,17 @@ import { Snackbar, Alert } from "@mui/material";
 
 function Employ() {
   const [newEmployee, setNewEmployee] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     role: "",
-    phoneNumber: "",
+    phone_number: "",
     shift: "",
     sales: 0,
     salary:"",
-    is_paid:false
+    date_joined:""
   });
-
+   
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -35,25 +35,37 @@ function Employ() {
       return;
     }
 
+    const employeeData = { ...newEmployee };
+
+    // Include sales only if the role is "Pump Attendant"
+    if (newEmployee.role !== "Pump Attendant") {
+      delete employeeData.sales;  
+    }
+
     // Add new employee to the database
-    fetch("http://localhost:3000/employee", {
+    fetch("http://127.0.0.1:5000/employees", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newEmployee),
+      body: JSON.stringify(employeeData),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to create employee. Please try again.");
+        }
+      })
       .then((data) => {
-        console.log(data);
-        // Reset form
+        setNewEmployee(data)
         setNewEmployee({
-          firstName: "",
-          lastName: "",
+          first_name: "",
+          last_name: "",
           email: "",
           role: "",
-          phoneNumber: "",
+          phone_number: "",
           shift: "",
+          salary: "",
+          sales: 0, 
         });
 
         // Show success Snackbar
@@ -69,7 +81,8 @@ function Employ() {
         setSnackbarMessage("Failed to add employee.");
         setSnackbarOpen(true);
       });
-  };
+};
+
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -84,8 +97,8 @@ function Employ() {
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
-              name="firstName"
-              value={newEmployee.firstName}
+              name="first_name"
+              value={newEmployee.first_name}
               onChange={handleEmployeeInput}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
@@ -101,8 +114,8 @@ function Employ() {
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
-              name="lastName"
-              value={newEmployee.lastName}
+              name="last_name"
+              value={newEmployee.last_name}
               onChange={handleEmployeeInput}
               id="floating_last_name"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -141,8 +154,8 @@ function Employ() {
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="tel"
-              name="phoneNumber"
-              value={newEmployee.phoneNumber}
+              name="phone_number"
+              value={newEmployee.phone_number}
               onChange={handleEmployeeInput}
               id="floating_phone"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"

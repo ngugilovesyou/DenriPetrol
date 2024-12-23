@@ -26,7 +26,7 @@
       "role": "Pump Attendant",
       "phoneNumber": "+254758750963",
       "shift": "Morning",
-      "sales": 0
+      "sales": "1000"
     },
     {
       "id": "7589",
@@ -49,6 +49,51 @@
       "sales": 0,
       "salary": "100,000",
       "is_paid": false
+    },
+    {
+      "id": "e731",
+      "firstName": "Peter",
+      "lastName": "Gitau",
+      "email": "kamau@example.com",
+      "role": "",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "100,000",
+      "is_paid": false
+    },
+    {
+      "id": "2cab",
+      "firstName": "James",
+      "lastName": "Gichuru",
+      "email": "nicole24@example.net",
+      "role": "Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "80,000",
+      "is_paid": false
+    },
+    {
+      "id": "7801",
+      "firstName": "James",
+      "lastName": "Gichuhi",
+      "email": "nicole24@example.net",
+      "role": "Security Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "80,000",
+      "is_paid": false
+    },
+    {
+      "id": "3e7b",
+      "firstName": "Samuel",
+      "lastName": "Gitau",
+      "email": "gavin19@example.net",
+      "role": "Accountant",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning"
     }
   ],
   "users": [
@@ -89,7 +134,7 @@
       "employee": "John Doe",
       "date": "2024-06-17",
       "time": "08:00",
-      "amount": 100,
+      "litres": 100,
       "totalCost": 15000
     },
     {
@@ -99,7 +144,7 @@
       "employee": "Jane Smith",
       "date": "2024-06-17",
       "time": "09:30",
-      "amount": 200,
+      "litres": 200,
       "totalCost": 30000
     },
     {
@@ -109,8 +154,28 @@
       "employee": "John Doe",
       "date": "2024-06-17",
       "time": "10:00",
-      "amount": 50,
+      "litres": 50,
       "totalCost": 7500
+    },
+    {
+      "id": "ef04",
+      "fuelType": "Diesel",
+      "pump": "Pump 1",
+      "employeeId": "aad1",
+      "date": "2024-12-23",
+      "time": "14:39",
+      "litres": "1000",
+      "totalCost": "15000"
+    },
+    {
+      "id": "db16",
+      "fuelType": "Diesel",
+      "pump": "Pump 3",
+      "employeeId": "559e",
+      "date": "2024-12-23",
+      "time": "",
+      "litres": "100",
+      "totalCost": "10000"
     }
   ],
   "orders": [

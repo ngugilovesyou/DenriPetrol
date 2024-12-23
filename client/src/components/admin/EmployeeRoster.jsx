@@ -46,7 +46,12 @@ function EmployeeRoster() {
   const [employeeToRemove, setEmployeeToRemove] = useState(null); 
 
   useEffect(() => {
-    fetch("http://localhost:3000/employee")
+    fetch("http://127.0.0.1:5000/employees", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((r) => r.json())
       .then((data) => setEmployees(data));
   }, [setEmployees]);
@@ -59,7 +64,7 @@ function EmployeeRoster() {
 
   const confirmRemoveEmployee = () => {
     if (employeeToRemove) {
-      fetch(`http://localhost:3000/employee/${employeeToRemove}`, {
+      fetch(`http://127.0.0.1:5000/employees/${employeeToRemove}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +85,7 @@ function EmployeeRoster() {
   const handleAddSales = (employeeId) => {
     if (!salesInput.salesAmount || salesInput.employeeId !== employeeId) return;
 
-    fetch(`http://localhost:3000/employee/${employeeId}`, {
+    fetch(`http://127.0.0.1:5000/employees/${employeeId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -125,7 +130,7 @@ function EmployeeRoster() {
               <tr key={employee.id}>
                 <td>{employee.id}</td>
                 <td>
-                  {employee.firstName} {employee.lastName}
+                  {employee.name}
                 </td>
                 <td>{employee.role}</td>
                 <td>{employee.shift}</td>

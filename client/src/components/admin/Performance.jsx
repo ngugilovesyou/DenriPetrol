@@ -7,7 +7,12 @@ function Performance() {
   const { employees, setEmployees } = useStore();
 
   useEffect(() => {
-    fetch("http://localhost:3000/employee")
+    fetch("http://127.0.0.1:5000/employees", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((r) => r.json())
       .then((data) => setEmployees(data));
   }, [setEmployees]);
@@ -21,7 +26,7 @@ function Performance() {
         ) : (
           employees.map((employee) => (
             <li key={employee.id}>
-              {employee.firstName} {employee.lastName} ({employee.role})
+              {employee.name} ({employee.role})
               {employee.role === "Pump Attendant" &&
                 employee.sales !== undefined && (
                   <> - Sales: ${employee.sales}</>

@@ -8,6 +8,7 @@ function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleEmployeeInput = (e) => {
@@ -16,15 +17,15 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(""); // Reset error
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert("Please enter a valid email address.");
+      setError("Please enter a valid email address.");
       return;
     }
 
-
-    fetch("http://localhost:3000/users", {
+    fetch("http://127.0.0.1:5000/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,22 +34,25 @@ function Login() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to log in. Please try again.");
+          return response.json().then((err) => {
+            throw new Error(
+              err.message || "Failed to log in. Please try again."
+            );
+          });
         }
         return response.json();
       })
       .then((data) => {
         setFormData({ email: "", password: "" });
-        if (data.is_Admin) {
+        if (data.is_admin) {
           navigate("/dashboard");
-        } else{
-          navigate('/')
+        } else {
+          navigate("/");
         }
-        // navigate('/')
       })
       .catch((err) => {
-        <Alert severity="error">failed to login</Alert>;
-      })
+        setError(err.message);
+      });
   };
 
   return (
@@ -91,6 +95,7 @@ function Login() {
             Password
           </label>
         </div>
+        {error && <Alert severity="error">{error}</Alert>}
         <button
           type="submit"
           className="bg-[#34495e] text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"

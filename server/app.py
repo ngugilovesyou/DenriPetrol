@@ -6,130 +6,80 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS  # Added CORS for cross-origin requests
+from datetime import datetime
 
+from models import db,User, Employee, Sales, Fuel, Order, Supplier
 # Create Flask app and API
 app = Flask(__name__)
 api = Api(app)
 
 # Enable CORS for all domains (you may want to restrict this to specific domains in production)
-CORS(app)
+CORS(app, origins="http://localhost:5173")
+
 
 # Load configuration settings
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key')  # Use environment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///yourdatabase.db')  # Use environment variable
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # Use environment variable
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///denripetrol.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_PERMANENT'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+# app.config['SQLALCHEMY_BINDS'] = True
 
 # Initialize the database
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
-# Models
-class Admin(db.Model):
-    __tablename__ = 'admins'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email
-        }
-
-class Employee(db.Model):
-    __tablename__ = 'employees'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    role = db.Column(db.String(120), nullable=False, default="Attendant")
-    shift = db.Column(db.String(120), nullable=False)
-    sales = db.Column(db.Float, nullable=False)
-    salary = db.Column(db.Float, nullable=False)
-    is_paid = db.Column(db.Boolean, nullable=False, default=False)
-    date_joined = db.Column(db.Date, nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'role': self.role,
-            'shift': self.shift,
-            'sales': self.sales,
-            'salary': self.salary,
-            'is_paid': self.is_paid,
-            'date_joined': self.date_joined.isoformat()  # Return date as ISO string
-        }
-
-class Sales(db.Model):
-    __tablename__ = 'sales'
-
-    id = db.Column(db.Integer, primary_key=True)
-    fuel_type = db.Column(db.String(120), nullable=False)
-    pump_number = db.Column(db.Integer, nullable=False)
-    liters = db.Column(db.Float, nullable=False)
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'), nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'fuel_type': self.fuel_type,
-            'pump_number': self.pump_number,
-            'liters': self.liters,
-            'employee_id': self.employee_id
-        }
-
-# --------------------- Admin Endpoints ---------------------
-class AdminResource(Resource):
+# --------------------- User Endpoints ---------------------
+class UserResource(Resource):
     def post(self):
         data = request.get_json()
 
         # Validate required fields
-        required_fields = ['username', 'email', 'password']
-        for field in required_fields:
-            if field not in data:
-                return {'message': f'{field} is required'}, 400
+        required_fields = ['first_name', 'last_name', 'email', 'password']
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return {'message': f'Missing fields: {", ".join(missing_fields)}'}, 400
 
-        # Check if admin already exists
-        if Admin.query.filter_by(username=data['username']).first():
-            return {'message': 'Username already exists'}, 400
-        if Admin.query.filter_by(email=data['email']).first():
+        # Check if User already exists by email
+        if User.query.filter_by(email=data['email']).first():
             return {'message': 'Email already exists'}, 400
 
-        # Create new admin
-        new_admin = Admin(
-            username=data['username'],
+        # Create new User
+        new_user = User(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
             email=data['email'],
-            password=generate_password_hash(data['password'], method='pbkdf2:sha256')  
+            password=generate_password_hash(data['password'], method='pbkdf2:sha256') ,
+            date_joined = datetime.now()
         )
 
         try:
-            db.session.add(new_admin)
+            db.session.add(new_user)
             db.session.commit()
-            return {'message': 'Admin created successfully'}, 201
+            return {'message': 'User created successfully'}, 201
         except Exception as e:
             db.session.rollback()
-            return {'message': f'Error creating admin: {str(e)}'}, 500
-
-class AdminLoginResource(Resource):
+            # Log the error for debugging purposes (optional)
+            app.logger.error(f'Error creating user: {str(e)}')
+            return {'message': 'Error creating user'}, 500
+        
+class UserLoginResource(Resource):
     def post(self):
         data = request.get_json()
 
+        # Validate input
         if not data.get('email') or not data.get('password'):
             return {'message': 'Email and password are required'}, 400
 
-        admin = Admin.query.filter_by(email=data['email']).first()
+        # Query for the user by email
+        user = User.query.filter_by(email=data['email']).first()
 
-        if admin and check_password_hash(admin.password, data['password']):
-            # Set session
-            session['admin_id'] = admin.id
-            session.permanent = True  # Session lasts as per PERMANENT_SESSION_LIFETIME
+        if user and check_password_hash(user.password, data['password']):
+            # Set session for the user
+            session['user_id'] = user.id
+            session.permanent = True  # Session lasts as per `PERMANENT_SESSION_LIFETIME`
 
-            return {'message': 'Login successful', 'admin_id': admin.id}, 200
+            return user.to_dict(), 200
 
         return {'message': 'Invalid email or password'}, 401
 
@@ -142,18 +92,22 @@ class EmployeeResource(Resource):
     def post(self):
         data = request.get_json()
 
-        required_fields = ['name', 'role', 'shift', 'sales', 'salary', 'date_joined']
+        required_fields = ['first_name', 'last_name', 'email','phone_number', 'role', 'shift', 'sales', 'salary']
         for field in required_fields:
             if field not in data:
                 return {'message': f'{field} is required'}, 400
 
         new_employee = Employee(
-            name=data['name'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            phone_number=data['phone_number'],
             role=data['role'],
             shift=data['shift'],
             sales=data['sales'],
             salary=data['salary'],
-            date_joined=datetime.strptime(data['date_joined'], '%Y-%m-%d').date()
+            date_joined = datetime.now(),
+            
         )
 
         try:
@@ -187,6 +141,15 @@ class EmployeeSingleResource(Resource):
 
         db.session.commit()
         return jsonify(employee.to_dict())
+    def patch(self, id):
+        data=request.get_json()
+        employee = Employee.query.get(id)
+        if not employee:
+            return {'message': 'Employee not found'}, 404
+        sales=data['sales']
+        employee.sales = sales
+        db.session.commit()
+        return jsonify(employee.to_dict())
 
     def delete(self, id):
         employee = Employee.query.get(id)
@@ -197,36 +160,81 @@ class EmployeeSingleResource(Resource):
         db.session.commit()
 
         return {'message': 'Employee deleted successfully'}, 200
+# --------------------- Fuel Endpoints ---------------------
+class FuelResource(Resource):
+    def get(self):
+        fuels = Fuel.query.all()
+        return jsonify([fuel.to_dict() for fuel in fuels])
 
+class FuelById(Resource):
+    def put(self, id):  
+        data = request.get_json()
+        
+        fuel = Fuel.query.get(id) 
+        
+        if not fuel:
+            return {'message': 'Fuel not found'}, 404  
+
+        # Update fuel data if provided
+        if "level" in data:
+            fuel.level = data["level"]
+        if "price" in data:
+            fuel.price = data["price"]
+
+        try:
+            db.session.commit()  
+            return jsonify(fuel.to_dict()), 200 
+        except Exception as e:
+            db.session.rollback()  
+            return {'message': f'Error updating fuel: {str(e)}'}, 500 
+          
 # --------------------- Sales Endpoints ---------------------
 class SalesResource(Resource):
     def get(self):
         sales = Sales.query.all()
         return jsonify([sale.to_dict() for sale in sales])
-
     def post(self):
-        data = request.get_json()
-
-        required_fields = ['fuel_type', 'pump_number', 'liters', 'employee_id']
-        for field in required_fields:
-            if field not in data:
-                return {'message': f'{field} is required'}, 400
-
-        new_sale = Sales(
-            fuel_type=data['fuel_type'],
-            pump_number=data['pump_number'],
-            liters=data['liters'],
-            employee_id=data['employee_id']
-        )
-
         try:
+            data = request.get_json()
+
+            # Validate required fields
+            required_fields = ['fuel_type', 'pump', 'litres', 'employee_id', 'time']
+            for field in required_fields:
+                if field not in data or not data[field]:
+                    return {'message': f'{field} is required'}, 400
+
+            # Parse and validate date
+            try:
+                date = datetime.strptime(data.get('date', datetime.utcnow().strftime("%Y-%m-%d")), "%Y-%m-%d").date()
+            except ValueError:
+                return {'message': 'Invalid date format. Use YYYY-MM-DD.'}, 400
+
+            # Parse and validate time
+            try:
+                time = datetime.strptime(data['time'], "%H:%M").time()
+            except ValueError:
+                return {'message': 'Invalid time format. Use HH:MM.'}, 400
+
+            # Create a new Sale record
+            new_sale = Sales(
+                fuel_type=data['fuel_type'],
+                pump=data['pump'],
+                date=date,
+                time=time,
+                litres=float(data['litres']),
+                total_cost=float(data.get('total_cost', 0.0)),  
+                employee_id=int(data['employee_id'])
+            )
+
+            # Add to the database
             db.session.add(new_sale)
             db.session.commit()
-            return {'message': 'Sale created successfully'}, 201
-        except Exception as e:
-            db.session.rollback()
-            return {'message': f'Error creating sale: {str(e)}'}, 500
 
+            return {'message': 'Sale recorded successfully', 'sale_id': new_sale.id}, 201
+
+        except Exception as e:
+            return {'message': f'An error occurred: {str(e)}'}, 500
+        
 class SalesSingleResource(Resource):
     def get(self, id):
         sale = Sales.query.get(id)
@@ -258,13 +266,62 @@ class SalesSingleResource(Resource):
 
         return {'message': 'Sale deleted successfully'}, 200
 
+class OrderResource(Resource):
+    def get(self):
+        orders = Order.query.all()
+        return jsonify([order.to_dict() for order in orders])
+    
+    def post(self):
+        data = request.get_json()
+
+        required_fields = ['fuel_type', 'supplier', 'estimated_delivery_date']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return {'message': f'{field} is required'}, 400
+
+        new_order = Order(
+            fuel_type=data['fuel_type'],
+            supplier = data['supplier'],
+            status="Pending",
+            estimated_delivery_date=['estimated_delivery_date']
+        )
+        try:
+            db.session.add(new_order)
+            db.session.commit()
+            return {'message': 'Order created successfully', 'order_id': new_order.id}, 201
+        except Exception as e:
+            db.session.rollback()
+            return {'message': f'Error creating order: {str(e)}'}, 500
+
+class OrderById(Resource):
+    def patch(self, id):
+        order = Order.query.get(id)
+        if not order:
+            return {'message': 'Order not found'}, 404
+
+        data = request.get_json()
+
+        order.status = data.get('status', order.status)
+
+        db.session.commit()
+        return jsonify(order.to_dict()) 
+
+class SupplierResource(Resource):
+    def get(self):
+        suppliers = Supplier.query.all()
+        return jsonify([supplier.to_dict() for supplier in suppliers])       
 # API Routes Setup
-api.add_resource(AdminResource, '/admins')
-api.add_resource(AdminLoginResource, '/admins/login')
+api.add_resource(UserResource, '/users')
+api.add_resource(UserLoginResource, '/users/login')
 api.add_resource(EmployeeResource, '/employees')
 api.add_resource(EmployeeSingleResource, '/employees/<int:id>')
 api.add_resource(SalesResource, '/sales')
 api.add_resource(SalesSingleResource, '/sales/<int:id>')
-
+api.add_resource(FuelResource, '/fuel')  
+api.add_resource(FuelById, '/fuel/<int:id>')
+api.add_resource(OrderResource, '/orders')
+api.add_resource(OrderById, '/orders/<int:id>')
+api.add_resource(SupplierResource, '/suppliers')
 if __name__ == '__main__':
     app.run(debug=True)
+

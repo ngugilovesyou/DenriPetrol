@@ -6,9 +6,9 @@ import Snackbar from "@mui/material/Snackbar";
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [newOrder, setNewOrder] = useState({
-    fuelType: "",
+    fuel_type: "",
     supplier: "",
-    deliveryTime: "",
+    estimated_delivery_date: "",
   });
   const [suppliers, setSuppliers] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -16,13 +16,23 @@ function Orders() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
-    fetch("http://localhost:3000/orders")
+    fetch("http://127.0.0.1:5000/orders", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((r) => r.json())
       .then((data) => setOrders(data));
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/suppliers")
+    fetch("http://127.0.0.1:5000/suppliers", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((r) => r.json())
       .then((data) => setSuppliers(data));
   }, []);
@@ -42,12 +52,16 @@ function Orders() {
 
   // Place a new order
   const placeOrder = () => {
-    if (!newOrder.fuelType || !newOrder.supplier || !newOrder.deliveryTime) {
+    if (
+      !newOrder.fuel_type ||
+      !newOrder.supplier ||
+      !newOrder.estimated_delivery_date
+    ) {
       showSnackbar("Please fill out all fields to place an order.", "error");
       return;
     }
 
-    fetch("http://localhost:3000/orders", {
+    fetch("http://127.0.0.1:5000/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,13 +72,17 @@ function Orders() {
       .then(() => {
         const newOrderEntry = {
           id: orders.length + 1,
-          fuelType: newOrder.fuelType,
+          fuel_type: newOrder.fuel_type,
           supplier: newOrder.supplier,
           status: "Pending",
-          deliveryTime: newOrder.deliveryTime,
+          estimated_delivery_date: newOrder.estimated_delivery_date,
         };
         setOrders([...orders, newOrderEntry]);
-        setNewOrder({ fuelType: "", supplier: "", deliveryTime: "" });
+        setNewOrder({
+          fuel_type: "",
+          supplier: "",
+          estimated_delivery_date: "",
+        });
         showSnackbar("Order placed successfully!", "success");
       })
       .catch(() => {
@@ -74,7 +92,7 @@ function Orders() {
 
   // Update order status to "Completed"
   const handleStatusChange = (Id) => {
-    fetch(`http://localhost:3000/orders/${Id}`, {
+    fetch(`http://127.0.0.1:5000/orders/${Id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -121,13 +139,13 @@ function Orders() {
               orders.map((order) => (
                 <tr key={order.id}>
                   <td>{order.id}</td>
-                  <td>{order.fuelType}</td>
+                  <td>{order.fuel_type}</td>
                   <td>{order.supplier}</td>
                   <td>{order.status}</td>
-                  <td>{order.deliveryTime}</td>
+                  <td>{order.estimated_delivery_date}</td>
                   <td>
                     {order.status !== "Completed" && (
-                      <button onClick={() => handleStatusChange(order.id)} >
+                      <button onClick={() => handleStatusChange(order.id)}>
                         Complete
                       </button>
                     )}
@@ -146,8 +164,8 @@ function Orders() {
           <label>
             Fuel Type:
             <select
-              name="fuelType"
-              value={newOrder.fuelType}
+              name="fuel_type"
+              value={newOrder.fuel_type}
               onChange={handleInputChange}
             >
               <option value="">Select Fuel Type</option>
@@ -165,8 +183,8 @@ function Orders() {
               onChange={handleInputChange}
             >
               <option value="">Select Supplier</option>
-              {suppliers.map((supplier, index) => (
-                <option key={index} value={supplier.name}>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.name}>
                   {supplier.name}
                 </option>
               ))}
@@ -176,8 +194,8 @@ function Orders() {
             Delivery Time:
             <input
               type="datetime-local"
-              name="deliveryTime"
-              value={newOrder.deliveryTime}
+              name="estimated_delivery_date"
+              value={newOrder.estimated_delivery_date}
               onChange={handleInputChange}
             />
           </label>
@@ -191,7 +209,8 @@ function Orders() {
         <ul>
           {suppliers.map((supplier, index) => (
             <li key={index}>
-              <strong>{supplier.name}</strong> - Contact: {supplier.contact}
+              <strong>{supplier.name}</strong> - Email: {supplier.email} - Phone
+              Number: {supplier.phone_number}
             </li>
           ))}
         </ul>

@@ -49,6 +49,18 @@
       "sales": 0,
       "salary": "100,000",
       "is_paid": false
+    },
+    {
+      "id": "deae",
+      "firstName": "mark",
+      "lastName": "tony",
+      "email": "kipkoechtony510@gmail.com",
+      "role": "Manager",
+      "phoneNumber": "0745694981",
+      "shift": "evening",
+      "sales": 0,
+      "salary": "100,000",
+      "is_paid": false
     }
   ],
   "users": [
@@ -79,6 +91,61 @@
       "id": "e728",
       "email": "simpforngugi@gmail.com",
       "password": "12Abc"
+    },
+    {
+      "id": "fb1d",
+      "firstName": "mark",
+      "lastName": "tony",
+      "email": "kipkoechtony510@gmail.com",
+      "password": "0112410711",
+      "is_Admin": false
+    },
+    {
+      "id": "1de3",
+      "firstName": "mark",
+      "lastName": "tony",
+      "email": "kipkoechtony510@gmail.com",
+      "password": "0112410711",
+      "is_Admin": false
+    },
+    {
+      "id": "de4c",
+      "email": "kipkoechtony510@gmail.com",
+      "password": "0112410711"
+    },
+    {
+      "id": "fec3",
+      "firstName": "emmanuel",
+      "lastName": "tony",
+      "email": "e@example.com",
+      "password": "0112410711",
+      "is_Admin": false
+    },
+    {
+      "id": "c8d2",
+      "firstName": "emmanuel",
+      "lastName": "tony",
+      "email": "e@example.com",
+      "password": "0112410711",
+      "is_admin": false
+    },
+    {
+      "id": "65e5",
+      "email": "e@example.com",
+      "password": "0112410711"
+    },
+    {
+      "id": "d7d5",
+      "firstName": "philip",
+      "lastName": "tony",
+      "email": "p@example.com",
+      "password": "0112410711",
+      "is_Admin": false
+    },
+    {
+      "id": "c745",
+      "email": "p@example.com",
+      "password": "0112410711"
     }
   ],
   "sales": [
@@ -163,6 +230,12 @@
       "supplier": "Supplier B",
       "deliveryTime": "2024-12-22T23:20",
       "status": "Completed"
+    },
+    {
+      "id": "0011",
+      "fuelType": "Diesel",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-12-22T21:10"
     }
   ],
   "suppliers": [

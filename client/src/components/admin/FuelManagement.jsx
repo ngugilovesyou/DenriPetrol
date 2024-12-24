@@ -6,7 +6,7 @@ function FuelManagement() {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3000/fuelManagement")
+    fetch("http://localhost:3001/fuelManagement")
       .then((r) => r.json())
       .then((data) => setFuelStock(data))
       .catch((error) => console.error("Error fetching fuel data:", error));
@@ -19,7 +19,7 @@ function FuelManagement() {
         ...prev[fuelId],
         [field]:
           field === "level" || field === "price"
-            ? Math.max(0, parseFloat(value) || 0) // Ensure non-negative values
+            ? Math.max(0, parseFloat(value) || 0) 
             : value,
       },
     }));
@@ -34,7 +34,7 @@ function FuelManagement() {
       ...formData[fuelId],
     };
 
-    fetch(`http://localhost:3000/fuelManagement/${fuelId}`, {
+    fetch(`http://localhost:3001/fuelManagement/${fuelId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

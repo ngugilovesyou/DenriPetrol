@@ -7,7 +7,7 @@ function Performance() {
   const { employees, setEmployees } = useStore();
 
   useEffect(() => {
-    fetch("http://localhost:3000/employee")
+    fetch("http://localhost:3001/employee")
       .then((r) => r.json())
       .then((data) => setEmployees(data));
   }, [setEmployees]);

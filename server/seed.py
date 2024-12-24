@@ -10,7 +10,12 @@ with app.app_context():
     db.session.commit()
     Employee.query.delete()
     db.session.commit()
-
+    Fuel.query.delete()
+    db.session.commit()
+    Supplier.query.delete()
+    db.session.commit()
+    Sales.query.delete()
+    db.session.commit()
     def seed_users():
         # Create User objects
         user1 = User(
@@ -70,13 +75,61 @@ with app.app_context():
         print("Sales seeded successfully.")
     
     def seed_suppliers():
-        # Create Supplier objects
-        supplier1 = Supplier(
-            name='ABC Fuels',
-            email='contact@abcfuels.com',
-            phone_number='254712345678'
-        )
-        db.session.add_all([supplier1])
+        suppliers = [
+            Supplier(
+                name='ABC Fuels',
+                email='contact@abcfuels.com',
+                phone_number='254712345678'
+            ),
+            Supplier(
+                name='Kenya Energy Solutions',
+                email='info@kenyaenergysolutions.co.ke',
+                phone_number='254711223344'
+            ),
+            Supplier(
+                name='East Africa Petroleum Ltd.',
+                email='sales@eastafricapetroleum.com',
+                phone_number='254733445566'
+            ),
+            Supplier(
+                name='Nairobi Fuel Distributors',
+                email='support@nairoifueldist.co.ke',
+                phone_number='254722556677'
+            ),
+            Supplier(
+                name='Rift Valley Oil Supplies',
+                email='inquiries@riftvalleyoils.com',
+                phone_number='254720123456'
+            ),
+            Supplier(
+                name='Coastal Petroleum Co.',
+                email='service@coastalpetroleum.co.ke',
+                phone_number='254734567890'
+            ),
+            Supplier(
+                name='Lake Region Energy',
+                email='contact@lakeregionenergy.com',
+                phone_number='254710987654'
+            ),
+            Supplier(
+                name='Mount Kenya Fuels',
+                email='info@mountkenyafuels.com',
+                phone_number='254715555444'
+            ),
+            Supplier(
+                name='Northern Oil Distributors',
+                email='sales@northernoildist.co.ke',
+                phone_number='254713332211'
+            ),
+            Supplier(
+                name='Savannah Fuel Suppliers',
+                email='help@savannahfuels.com',
+                phone_number='254727888999'
+            )
+        ]
+
+    
+        db.session.add_all(suppliers)
         db.session.commit()
         print("Suppliers seeded successfully.")
 
@@ -88,14 +141,15 @@ with app.app_context():
             status='Pending',
             estimated_delivery_date=datetime.strptime('2024-12-28', '%Y-%m-%d').date()
         )
-        db.session.add_all([order1])
+        db.session.add(order1)
         db.session.commit()
         print("Orders seeded successfully.")
 
     def seed_fuel():
         fuel1 = Fuel(fuel_type="Petrol", level=0, price=0)
         fuel2 = Fuel(fuel_type="Diesel", level=0, price=0)
-        db.session.add_all([fuel1, fuel2])
+        fuel3 = Fuel(fuel_type="Kerosene", level=0, price=0)
+        db.session.add_all([fuel1, fuel2, fuel3])
         db.session.commit()
         print("Fuel seeded successfully.")
 

@@ -18,9 +18,6 @@ function Services() {
           backgroundColor: "#34495e",
           marginTop: "2em",
           color: "white",
-          // display: "flex"
-          // alignItems: "center",
-          // textAlign: "center",
         }}
       >
         <div className="carwash flex flex-col md:flex-row justify-between items-center">
@@ -33,21 +30,24 @@ function Services() {
           </div>
 
           {/* Description paragraph */}
-          <div className="w-full md:w-1/2 md:pl-10">
-            <h3 className="text-2xl font-semibold mb-4">
-              How We Wash Your Car
-            </h3>
-            <p className="text-lg text-white-700">
-              At Denri Petrol, we offer a comprehensive and eco-friendly car
-              wash service that ensures your vehicle is spotless inside and out.
-              Our professional team uses high-pressure water jets, specialized
-              foam solutions, and microfiber cloths to carefully clean your cars
-              exterior, removing dirt, grime, and stains. We also provide a
-              thorough interior cleaning, vacuuming and wiping down every
-              surface for a fresh and comfortable ride. We pride ourselves on
-              delivering high-quality service with attention to detail, ensuring
-              that your car looks and feels as good as new after each wash.
-            </p>
+          <div className="w-full md:w-1/2 md:pl-10" >
+            <div style={{ marginLeft: "15px" }}>
+              <h3 className="text-2xl font-semibold mb-4">
+                How We Wash Your Car
+              </h3>
+              <p className="text-lg text-white-700">
+                At Denri Petrol, we offer a comprehensive and eco-friendly car
+                wash service that ensures your vehicle is spotless inside and
+                out. Our professional team uses high-pressure water jets,
+                specialized foam solutions, and microfiber cloths to carefully
+                clean your cars exterior, removing dirt, grime, and stains. We
+                also provide a thorough interior cleaning, vacuuming and wiping
+                down every surface for a fresh and comfortable ride. We pride
+                ourselves on delivering high-quality service with attention to
+                detail, ensuring that your car looks and feels as good as new
+                after each wash.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -58,22 +58,24 @@ function Services() {
             <h3 className="text-2xl font-semibold mb-4">
               How We Service Your Car
             </h3>
-            <p className="text-lg text-white-700">
-              At Denri Petrol, we offer more than just a regular car wash – we
-              ensure your vehicle gets the care it deserves. We provide
-              high-quality lubricants to maintain the longevity and performance
-              of your cars engine, reducing friction and keeping everything
-              running smoothly. Our expertly trained personnel are always
-              available to guide you through the best services for your cars
-              needs. Whether its changing the oil, topping off fluids, or
-              inspecting the vehicle for potential issues, our team is equipped
-              with the knowledge and experience to handle all of it. In addition
-              to regular car washes and maintenance, we offer tire rotations,
-              windshield cleaning, and waxing to keep your vehicle looking
-              great. Our goal is to provide comprehensive car care services,
-              ensuring that your vehicle performs at its best while looking as
-              good as new!
-            </p>
+            <div>
+              <p className="text-lg text-white-700">
+                At Denri Petrol, we offer more than just a regular car wash – we
+                ensure your vehicle gets the care it deserves. We provide
+                high-quality lubricants to maintain the longevity and
+                performance of your cars engine, reducing friction and keeping
+                everything running smoothly. Our expertly trained personnel are
+                always available to guide you through the best services for your
+                cars needs. Whether its changing the oil, topping off fluids, or
+                inspecting the vehicle for potential issues, our team is
+                equipped with the knowledge and experience to handle all of it.
+                In addition to regular car washes and maintenance, we offer tire
+                rotations, windshield cleaning, and waxing to keep your vehicle
+                looking great. Our goal is to provide comprehensive car care
+                services, ensuring that your vehicle performs at its best while
+                looking as good as new!
+              </p>
+            </div>
           </div>
 
           {/* Image on the right */}

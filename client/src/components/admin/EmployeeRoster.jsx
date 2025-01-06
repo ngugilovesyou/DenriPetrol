@@ -46,7 +46,7 @@ function EmployeeRoster() {
   const [employeeToRemove, setEmployeeToRemove] = useState(null); 
 
   useEffect(() => {
-    fetch("http://localhost:3001/employee")
+    fetch("http://localhost:3000/employee")
       .then((r) => r.json())
       .then((data) => setEmployees(data));
   }, [setEmployees]);
@@ -59,7 +59,7 @@ function EmployeeRoster() {
 
   const confirmRemoveEmployee = () => {
     if (employeeToRemove) {
-      fetch(`http://localhost:3001/employee/${employeeToRemove}`, {
+      fetch(`http://localhost:3000/employee/${employeeToRemove}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ function EmployeeRoster() {
   const handleAddSales = (employeeId) => {
     if (!salesInput.salesAmount || salesInput.employeeId !== employeeId) return;
 
-    fetch(`http://localhost:3001/employee/${employeeId}`, {
+    fetch(`http://localhost:3000/employee/${employeeId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

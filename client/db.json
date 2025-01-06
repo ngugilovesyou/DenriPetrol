@@ -37,30 +37,6 @@
       "phoneNumber": "+254758750963",
       "shift": "",
       "sales": 0
-    },
-    {
-      "id": "e9bc",
-      "firstName": "Samuel",
-      "lastName": "Gitau",
-      "email": "simpforngugi@gmail.com",
-      "role": "Marketing Manager",
-      "phoneNumber": "+254758750963",
-      "shift": "Morning",
-      "sales": 0,
-      "salary": "100,000",
-      "is_paid": false
-    },
-    {
-      "id": "deae",
-      "firstName": "mark",
-      "lastName": "tony",
-      "email": "kipkoechtony510@gmail.com",
-      "role": "Manager",
-      "phoneNumber": "0745694981",
-      "shift": "evening",
-      "sales": 0,
-      "salary": "100,000",
-      "is_paid": false
     }
   ],
   "users": [
@@ -145,6 +121,19 @@
     {
       "id": "c745",
       "email": "p@example.com",
+      "password": "0112410711"
+    },
+    {
+      "id": "096d",
+      "firstName": "mark",
+      "lastName": "tony",
+      "email": "mp@gmail.com",
+      "password": "0112410711",
+      "is_Admin": false
+    },
+    {
+      "id": "92e0",
+      "email": "mp@gmail.com",
       "password": "0112410711"
     }
   ],
@@ -236,6 +225,18 @@
       "fuelType": "Diesel",
       "supplier": "Supplier B",
       "deliveryTime": "2024-12-22T21:10"
+    },
+    {
+      "id": "f459",
+      "fuelType": "Diesel",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-12-26T22:30"
+    },
+    {
+      "id": "c0e7",
+      "fuelType": "Petrol",
+      "supplier": "Supplier A",
+      "deliveryTime": "2024-12-27T13:47"
     }
   ],
   "suppliers": [

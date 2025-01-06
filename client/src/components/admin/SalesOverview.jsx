@@ -7,7 +7,7 @@ function SalesOverview() {
   const [sales, setSales] = useState([]);
 
   useEffect(()=>{
-    fetch("http://localhost:3001/sales")
+    fetch("http://localhost:3000/sales")
      .then((r) => r.json())
      .then((data) => setSales(data));
   })

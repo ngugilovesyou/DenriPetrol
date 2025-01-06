@@ -36,7 +36,7 @@ function Employ() {
     }
 
     // Add new employee to the database
-    fetch("http://localhost:3001/employee", {
+    fetch("http://localhost:3000/employee", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

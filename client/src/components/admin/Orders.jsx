@@ -16,13 +16,13 @@ function Orders() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
-    fetch("http://localhost:3001/orders")
+    fetch("http://localhost:3000/orders")
       .then((r) => r.json())
       .then((data) => setOrders(data));
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/suppliers")
+    fetch("http://localhost:3000/suppliers")
       .then((r) => r.json())
       .then((data) => setSuppliers(data));
   }, []);
@@ -47,7 +47,7 @@ function Orders() {
       return;
     }
 
-    fetch("http://localhost:3001/orders", {
+    fetch("http://localhost:3000/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function Orders() {
 
   // Update order status to "Completed"
   const handleStatusChange = (Id) => {
-    fetch(`http://localhost:3001/orders/${Id}`, {
+    fetch(`http://localhost:3000/orders/${Id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

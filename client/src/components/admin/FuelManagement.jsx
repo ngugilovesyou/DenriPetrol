@@ -6,7 +6,7 @@ function FuelManagement() {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3001/fuelManagement")
+    fetch("http://localhost:3000/fuelManagement")
       .then((r) => r.json())
       .then((data) => setFuelStock(data))
       .catch((error) => console.error("Error fetching fuel data:", error));
@@ -34,7 +34,7 @@ function FuelManagement() {
       ...formData[fuelId],
     };
 
-    fetch(`http://localhost:3001/fuelManagement/${fuelId}`, {
+    fetch(`http://localhost:3000/fuelManagement/${fuelId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

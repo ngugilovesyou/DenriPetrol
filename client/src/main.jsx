@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -9,14 +9,29 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
-=======
+
 import React from "react";
+
+import { StrictMode } from "react";
+  
 import { createRoot } from "react-dom/client";
-import RouterComponent from "../Router";
+import "./index.css";
+import { RouterProvider } from "react-router-dom";
+import router from "../Router";
+// import App from './App.jsx'
+// import App from './App.jsx'
 
 createRoot(document.getElementById("root")).render(
+
   <React.StrictMode>
     <RouterComponent />
   </React.StrictMode>
 );
->>>>>>> 06c9bf0 (modified files to add functionality)
+
+
+  <StrictMode>
+    {/* <App /> */}
+    <RouterProvider router={router} />
+  </StrictMode>
+;
+

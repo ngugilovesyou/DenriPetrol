@@ -18,18 +18,18 @@ function Login() {
     message: "",
     severity: "",
   });
-  const {isLoggedIn, setIsLoggedIn} = useStore();
+  // const {isLoggedIn, setIsLoggedIn} = useStore();
   const navigate = useNavigate();
 
   const handleEmployeeInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-   useEffect(() => {
-     if (isLoggedIn) {
-       navigate("/");
-     }
-   }, [isLoggedIn, navigate]);
+  //  useEffect(() => {
+  //    if (isLoggedIn) {
+  //      navigate("/");
+  //    }
+  //  }, [isLoggedIn, navigate]);
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });

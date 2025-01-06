@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import useStore from "./Store";
+import useStore from "../Store";
+
 
 function Performance() {
   const { employees, setEmployees } = useStore();

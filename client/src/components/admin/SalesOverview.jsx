@@ -30,8 +30,7 @@ function SalesOverview() {
       },
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+      .then((data) =>{
         setSales(data);
       })
       .catch((error) => {
@@ -211,7 +210,7 @@ function SalesOverview() {
           Add New Sales
         </Button>
         <Dialog open={open} onClose={handleClose}>
-          <div>
+          <div style={{padding:'10px', margin:'10px'}}>
             <form className="max-w-md mx-auto">
               <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-5 group">

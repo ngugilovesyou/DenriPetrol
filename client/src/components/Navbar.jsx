@@ -1,14 +1,25 @@
-// import PriceIndicator from "./PriceIndicator";
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import useStore from "./Store";
 
-import { NavLink } from "react-router-dom";
 function Navbar() {
-    const handleScroll = (e, targetId) => {
-      e.preventDefault();
-      const targetSection = document.getElementById(targetId);
-      if (targetSection) {
-        targetSection.scrollIntoView({ behavior: "smooth" });
-      }
-    };
+  const { isLoggedIn, setIsLoggedIn } = useStore();
+  const navigate = useNavigate();
+
+  const handleScroll = (e, targetId) => {
+    e.preventDefault();
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false); // Update the store
+    navigate("/login"); // Redirect to login
+  };
+
   return (
     <div>
       <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
@@ -64,9 +75,17 @@ function Navbar() {
                   Contact Us
                 </a>
               </li>
-              <NavLink to={"/login"}>
-                <li className="nav-li">Log Out</li>
-              </NavLink>
+              {/* {isLoggedIn && (
+                <li className="nav-li" onClick={handleLogout}>
+                  Log Out
+                </li>
+              )} */}
+              <li className="nav-li" onClick={handleLogout}>
+                <button >
+                  Log out
+                  {/* <NavLink to="/login">Log In</NavLink> */}
+                </button>
+              </li>
             </ul>
           </div>
         </div>

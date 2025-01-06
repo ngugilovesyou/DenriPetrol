@@ -1,14 +1,9 @@
-import { StrictMode } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import { RouterProvider } from "react-router-dom";
-import router from "../Router";
-// import App from './App.jsx'
-// import App from './App.jsx'
+import RouterComponent from "../Router";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    {/* <App /> */}
-    <RouterProvider router={router} />
-  </StrictMode>
+  <React.StrictMode>
+    <RouterComponent />
+  </React.StrictMode>
 );

@@ -130,7 +130,7 @@ function FuelManagement() {
           .filter((fuel) => fuel.level < 10)
           .map((lowFuel) => (
             <p key={lowFuel.id} style={{ color: "red" }}>
-              Warning: {lowFuel.type} is below 10%!
+              Warning: {lowFuel.fuel_type} is below 10%!
             </p>
           ))}
       </div>

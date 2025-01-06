@@ -8,7 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
-import useStore from "./Store";
+
 
 function AlertDialog({ open, onClose, onConfirm }) {
   return (

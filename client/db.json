@@ -1,0 +1,250 @@
+{
+  "fuelManagement": [
+    {
+      "type": "Petrol",
+      "level": 100,
+      "price": 157,
+      "id": "6327"
+    }
+  ],
+  "employee": [
+    {
+      "id": "559e",
+      "firstName": "John",
+      "lastName": "Muchiri",
+      "email": "kamau@example.com",
+      "role": "cashier",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": "20000"
+    },
+    {
+      "id": "aad1",
+      "firstName": "Peter",
+      "lastName": "Njuguna",
+      "email": "donna31@example.com",
+      "role": "Pump Attendant",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": "1000"
+    },
+    {
+      "id": "7589",
+      "firstName": "James",
+      "lastName": "Bond",
+      "email": "nicole24@example.net",
+      "role": "Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "",
+      "sales": 0
+    },
+    {
+      "id": "e9bc",
+      "firstName": "Samuel",
+      "lastName": "Gitau",
+      "email": "simpforngugi@gmail.com",
+      "role": "Marketing Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "100,000",
+      "is_paid": false
+    },
+    {
+      "id": "e731",
+      "firstName": "Peter",
+      "lastName": "Gitau",
+      "email": "kamau@example.com",
+      "role": "",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "100,000",
+      "is_paid": false
+    },
+    {
+      "id": "2cab",
+      "firstName": "James",
+      "lastName": "Gichuru",
+      "email": "nicole24@example.net",
+      "role": "Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "80,000",
+      "is_paid": false
+    },
+    {
+      "id": "7801",
+      "firstName": "James",
+      "lastName": "Gichuhi",
+      "email": "nicole24@example.net",
+      "role": "Security Manager",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning",
+      "sales": 0,
+      "salary": "80,000",
+      "is_paid": false
+    },
+    {
+      "id": "3e7b",
+      "firstName": "Samuel",
+      "lastName": "Gitau",
+      "email": "gavin19@example.net",
+      "role": "Accountant",
+      "phoneNumber": "+254758750963",
+      "shift": "Morning"
+    }
+  ],
+  "users": [
+    {
+      "id": "448c",
+      "firstName": "Samuel",
+      "lastName": "Gitau",
+      "email": "simpforngugi@gmail.com",
+      "password": "123Abc",
+      "is_Admin": true
+    },
+    {
+      "id": "8f08",
+      "email": "simpforngugi@gmail.com",
+      "password": "123Abc"
+    },
+    {
+      "id": "e390",
+      "email": "simpforngugi@gmail.com",
+      "password": "123aBC"
+    },
+    {
+      "id": "d7d5",
+      "email": "simpforngugi@gmail.com",
+      "password": "123aBC"
+    },
+    {
+      "id": "e728",
+      "email": "simpforngugi@gmail.com",
+      "password": "12Abc"
+    }
+  ],
+  "sales": [
+    {
+      "id": "1",
+      "fuelType": "Petrol",
+      "pump": "Pump 1",
+      "employee": "John Doe",
+      "date": "2024-06-17",
+      "time": "08:00",
+      "litres": 100,
+      "totalCost": 15000
+    },
+    {
+      "id": "2",
+      "fuelType": "Diesel",
+      "pump": "Pump 2",
+      "employee": "Jane Smith",
+      "date": "2024-06-17",
+      "time": "09:30",
+      "litres": 200,
+      "totalCost": 30000
+    },
+    {
+      "id": "3",
+      "fuelType": "Kerosene",
+      "pump": "Pump 3",
+      "employee": "John Doe",
+      "date": "2024-06-17",
+      "time": "10:00",
+      "litres": 50,
+      "totalCost": 7500
+    },
+    {
+      "id": "ef04",
+      "fuelType": "Diesel",
+      "pump": "Pump 1",
+      "employeeId": "aad1",
+      "date": "2024-12-23",
+      "time": "14:39",
+      "litres": "1000",
+      "totalCost": "15000"
+    },
+    {
+      "id": "db16",
+      "fuelType": "Diesel",
+      "pump": "Pump 3",
+      "employeeId": "559e",
+      "date": "2024-12-23",
+      "time": "",
+      "litres": "100",
+      "totalCost": "10000"
+    }
+  ],
+  "orders": [
+    {
+      " id": 1,
+      "fuelType": "Petrol",
+      "status": "Completed",
+      "supplier": "Supplier A",
+      "deliveryTime": "2024-06-18 10:00",
+      "id": "372b"
+    },
+    {
+      "id": "2",
+      "fuelType": "Diesel",
+      "status": "Completed",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-06-18 15:00"
+    },
+    {
+      "id": "3",
+      "fuelType": "Kerosene",
+      "status": "Completed",
+      "supplier": "Supplier C",
+      "deliveryTime": "2024-06-17 12:00"
+    },
+    {
+      "id": "56bb",
+      "fuelType": "Diesel",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-12-21T21:08",
+      "status": "Completed"
+    },
+    {
+      "id": "a26e",
+      "fuelType": "Petrol",
+      "supplier": "Supplier A",
+      "deliveryTime": "2024-12-21T23:19",
+      "status": "Completed"
+    },
+    {
+      "id": "023e",
+      "fuelType": "Petrol",
+      "supplier": "Supplier A",
+      "deliveryTime": "2024-12-21T23:20",
+      "status": "Completed"
+    },
+    {
+      "id": "75e7",
+      "fuelType": "Petrol",
+      "supplier": "Supplier B",
+      "deliveryTime": "2024-12-22T23:20",
+      "status": "Completed"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "1",
+      "name": "Supplier A",
+      "contact": "supplierA@example.com"
+    },
+    {
+      "id": "2",
+      "name": "Supplier B",
+      "contact": "supplierB@example.com"
+    },
+    {
+      "id": "3",
+      "name": "Supplier C",
+      "contact": "supplierC@example.com"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
@@ -7,13 +8,31 @@ function Employ() {
     first_name: "",
     last_name: "",
     email: "",
-    role: "",
     phone_number: "",
+    role: "",
     shift: "",
     sales: 0,
-    salary:"",
-    date_joined:""
+    salary: "",
+    date_joined: getFormattedDateTime(),
   });
+
+  function getFormattedDateTime() {
+    const now = new Date();
+    const year = now.getFullYear(); 
+    const month = now.getMonth() + 1; 
+    const day = now.getDate(); 
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${year}-${formattedMonth}-${formattedDay} ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
    
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -26,23 +45,32 @@ function Employ() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate email
+    if (
+      !newEmployee.first_name ||
+      !newEmployee.last_name ||
+      !newEmployee.email
+    ) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage("All fields are required.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmployee.email)) {
       setSnackbarSeverity("error");
-      setSnackbarMessage("Please enter a valid email address..");
+      setSnackbarMessage("Please enter a valid email address.");
       setSnackbarOpen(true);
       return;
     }
 
     const employeeData = { ...newEmployee };
-
-    // Include sales only if the role is "Pump Attendant"
-    if (newEmployee.role !== "Pump Attendant") {
-      delete employeeData.sales;  
+    if (newEmployee.role !== "Pump Attendant" && !newEmployee.sales) {
+      employeeData.sales = 0; 
     }
 
-    // Add new employee to the database
+    // Send request
     fetch("http://127.0.0.1:5000/employees", {
       method: "POST",
       headers: {
@@ -50,13 +78,19 @@ function Employ() {
       },
       body: JSON.stringify(employeeData),
     })
-      .then((r) => {
+      .then(async (r) => {
+        console.log("Response Status:", r.status); 
         if (!r.ok) {
-          throw new Error("Failed to create employee. Please try again.");
+          const errorData = await r.json();
+          console.error("Error data:", errorData); 
+          throw new Error(errorData.error || "Failed to create employee.");
         }
+        const responseData = await r.json();
+        console.log("Response Data:", responseData); 
+        return responseData;
       })
       .then((data) => {
-        setNewEmployee(data)
+        console.log("Data after .then:", data);
         setNewEmployee({
           first_name: "",
           last_name: "",
@@ -67,21 +101,18 @@ function Employ() {
           salary: "",
           sales: 0, 
         });
-
-        // Show success Snackbar
         setSnackbarSeverity("success");
         setSnackbarMessage("Employee added successfully!");
         setSnackbarOpen(true);
       })
       .catch((error) => {
         console.error("Error:", error);
-
-        // Show error Snackbar
         setSnackbarSeverity("error");
-        setSnackbarMessage("Failed to add employee.");
+        setSnackbarMessage(error.message || "Failed to add employee.");
         setSnackbarOpen(true);
       });
-};
+  };
+
 
 
   const handleCloseSnackbar = () => {
@@ -159,8 +190,7 @@ function Employ() {
               onChange={handleEmployeeInput}
               id="floating_phone"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              // pattern="07[0-9]{8}" // Regex for 0700000000 format
+              placeholder=" " 
               title="Phone number must start with '07' followed by 8 digits" // Validation hint
               required
             />

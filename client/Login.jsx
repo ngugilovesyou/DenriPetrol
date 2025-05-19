@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,19 +11,31 @@ function Login() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
   const navigate = useNavigate();
 
   const handleEmployeeInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(""); // Reset error
+    setIsLoading(true); // Show loader
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address.");
+      setIsLoading(false); // Hide loader
       return;
     }
 
@@ -44,6 +58,11 @@ function Login() {
       })
       .then((data) => {
         setFormData({ email: "", password: "" });
+        setSnackbar({
+          open: true,
+          message: "Login successful!",
+          severity: "success",
+        });
         if (data.is_admin) {
           navigate("/dashboard");
         } else {
@@ -52,6 +71,14 @@ function Login() {
       })
       .catch((err) => {
         setError(err.message);
+        setSnackbar({
+          open: true,
+          message: err.message,
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setIsLoading(false); // Hide loader
       });
   };
 
@@ -98,15 +125,34 @@ function Login() {
         {error && <Alert severity="error">{error}</Alert>}
         <button
           type="submit"
-          className="bg-[#34495e] text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
+          className="bg-[#34495e] text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center flex items-center justify-center"
           onClick={handleSubmit}
+          disabled={isLoading}
         >
-          Sign In
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Log In"
+          )}
         </button>
       </form>
       <p>
         Don&apos;t have an account? <Link to="/register">Register</Link>
       </p>
+      {/* <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      > */}
+        {/* <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert> */}
+      {/* </Snackbar> */}
     </div>
   );
 }

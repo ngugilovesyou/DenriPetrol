@@ -91,12 +91,12 @@ class EmployeeResource(Resource):
 
     def post(self):
         data = request.get_json()
-
+        print("Received data:", data)
         required_fields = ['first_name', 'last_name', 'email','phone_number', 'role', 'shift', 'sales', 'salary']
         for field in required_fields:
             if field not in data:
                 return {'message': f'{field} is required'}, 400
-
+        # salary = int(data['salary'].replace(',', '')) if 'salary' in data else 0
         new_employee = Employee(
             first_name=data['first_name'],
             last_name=data['last_name'],
@@ -104,7 +104,7 @@ class EmployeeResource(Resource):
             phone_number=data['phone_number'],
             role=data['role'],
             shift=data['shift'],
-            sales=data['sales'],
+            sales=data.get('sales', 0),
             salary=data['salary'],
             date_joined = datetime.now(),
             
@@ -167,9 +167,9 @@ class FuelResource(Resource):
         return jsonify([fuel.to_dict() for fuel in fuels])
 
 class FuelById(Resource):
-    def put(self, id):  
+    def patch(self, id):  
         data = request.get_json()
-        
+       
         fuel = Fuel.query.get(id) 
         
         if not fuel:
@@ -183,7 +183,7 @@ class FuelById(Resource):
 
         try:
             db.session.commit()  
-            return jsonify(fuel.to_dict()), 200 
+            return fuel.to_dict(), 200 
         except Exception as e:
             db.session.rollback()  
             return {'message': f'Error updating fuel: {str(e)}'}, 500 
@@ -312,6 +312,7 @@ class SupplierResource(Resource):
         return jsonify([supplier.to_dict() for supplier in suppliers])       
 # API Routes Setup
 api.add_resource(UserResource, '/users')
+
 api.add_resource(UserLoginResource, '/users/login')
 api.add_resource(EmployeeResource, '/employees')
 api.add_resource(EmployeeSingleResource, '/employees/<int:id>')

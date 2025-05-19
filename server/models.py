@@ -17,6 +17,15 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.first_name} {self.last_name}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.first_name + ' ' + self.last_name,
+            'email': self.email,
+            'is_admin': self.is_admin,
+            'date_joined': self.date_joined.strftime('%Y-%m-%d')
+        }
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,10 +35,10 @@ class Employee(db.Model):
     role = db.Column(db.String(100))
     phone_number = db.Column(db.String(15))
     shift = db.Column(db.String(50))
-    sales = db.Column(db.Integer, default=0)
-    salary = db.Column(db.Float)
+    sales = db.Column(db.String, default=0)
+    salary = db.Column(db.String)
     is_paid = db.Column(db.Boolean, default=False)
-    date_joined = db.Column(db.Date)
+    date_joined = db.Column(db.Date, default=datetime.now)
 
     # Foreign key to the User model
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -125,3 +134,11 @@ class Fuel(db.Model):
 
     def __repr__(self):
         return f'<Fuel {self.fuel_type}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fuel_type': self.fuel_type,
+            'level': self.level,
+            'price': self.price
+        }

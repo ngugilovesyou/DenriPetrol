@@ -18,18 +18,18 @@ function Login() {
     message: "",
     severity: "",
   });
-  // const {isLoggedIn, setIsLoggedIn} = useStore();
+  const {isLoggedIn, setIsLoggedIn} = useStore();
   const navigate = useNavigate();
 
   const handleEmployeeInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //  useEffect(() => {
-  //    if (isLoggedIn) {
-  //      navigate("/");
-  //    }
-  //  }, [isLoggedIn, navigate]);
+   useEffect(() => {
+     if (isLoggedIn) {
+       navigate("/");
+     }
+   }, [isLoggedIn, navigate]);
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -150,20 +150,20 @@ function Login() {
         <p>
           Don&apos;t have an account? <Link to="/register">Register</Link>
         </p>
-        {/* <Snackbar
+        <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      > */}
-        {/* <Alert
+      >
+        <Alert
           onClose={handleSnackbarClose}
           severity={snackbar.severity}
           sx={{ width: "100%" }}
         >
           {snackbar.message}
-        </Alert> */}
-        {/* </Snackbar> */}
+        </Alert>
+        </Snackbar>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 function FuelManagement() {
-  const [fuelStock, setFuelStock] = useState([]);
+  const [fuelStock, setFuelStock] = useState([]);    
   const [formData, setFormData] = useState({});
 
   useEffect(() => {

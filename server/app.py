@@ -107,6 +107,7 @@ class EmployeeResource(Resource):
             sales=data.get('sales', 0),
             salary=data['salary'],
             date_joined = datetime.now(),
+        
             
         )
 
